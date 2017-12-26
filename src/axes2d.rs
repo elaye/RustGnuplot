@@ -456,6 +456,42 @@ impl Axes2D
 		self
 	}
 
+	/// Plot candlesticks.
+	/// # Arguments
+	/// * `x` - x values
+	/// * `low` - low values
+	/// * `open` - open values
+	/// * `close` - close values
+	/// * `high` - high values
+	/// * `options` - Array of PlotOption<&str> controlling the appearance of the plot element. The relevant options are:
+	///     * `Caption` - Specifies the caption for this dataset. Use an empty string to hide it (default).
+	///     * `PointSymbol` - Sets symbol for each point
+	///     * `PointSize` - Sets the size of each point
+	///     * `LineWidth` - Sets the width of the line
+	///     * `LineStyle` - Sets the style of the line
+	///     * `Color` - Sets the color
+	pub fn candlesticks<
+		'l,
+		Tx: DataType,
+		X: IntoIterator<Item = Tx>,
+		Tlow: DataType,
+		LOW: IntoIterator<Item = Tlow>,
+		Topen: DataType,
+		OPEN: IntoIterator<Item = Topen>,
+		Tclose: DataType,
+		CLOSE: IntoIterator<Item = Tclose>,
+		Thigh: DataType,
+		HIGH: IntoIterator<Item = Thigh>
+	>(
+		&'l mut self, x: X, low: LOW, open: OPEN, close: CLOSE, high: HIGH, options: &[PlotOption<&str>]
+	) -> &'l mut Self
+	{
+		self.common
+			.elems
+			.push(PlotElement::new_plot5(Candlesticks, x, low, open, close, high, options.to_one_way_owned()));
+		self
+	}
+
 	/// Plot a 2D scatter-plot of two curves (bound by `y_lo` and `y_hi`) with a filled region between them.
 	/// `FillRegion` plot option can be used to control what happens when the curves intersect. If set to Above, then the `y_lo < y_hi` region is filled.
 	/// If set to Below, then the `y_lo > y_hi` region is filled. Otherwise both regions are filled.

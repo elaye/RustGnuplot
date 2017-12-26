@@ -87,6 +87,43 @@ impl PlotElement
 		}
 	}
 
+	pub fn new_plot5<T1, X1, T2, X2, T3, X3, T4, X4, T5, X5>(plot_type: PlotType, x1: X1, x2: X2, x3: X3, x4: X4, x5: X5, options: Vec<PlotOption<String>>) -> PlotElement
+	where
+		T1: DataType,
+		X1: IntoIterator<Item = T1>,
+		T2: DataType,
+		X2: IntoIterator<Item = T2>,
+		T3: DataType,
+		X3: IntoIterator<Item = T3>,
+		T4: DataType,
+		X4: IntoIterator<Item = T4>,
+		T5: DataType,
+		X5: IntoIterator<Item = T5>
+	{
+		let mut num_rows = 0;
+		let mut data = vec![];
+		// TODO: Reserve.
+		for ((((x1, x2), x3), x4), x5) in x1.into_iter().zip(x2.into_iter()).zip(x3.into_iter()).zip(x4.into_iter()).zip(x5.into_iter())
+		{
+			data.push(x1.get());
+			data.push(x2.get());
+			data.push(x3.get());
+			data.push(x4.get());
+			data.push(x5.get());
+			num_rows += 1;
+		}
+
+		PlotElement {
+			data: data,
+			num_rows: num_rows,
+			num_cols: 5,
+			plot_type: plot_type,
+			source_type: Record,
+			is_3d: false,
+			options: options,
+		}
+	}
+
 	pub fn new_plot_matrix<T: DataType, X: IntoIterator<Item = T>>(
 		plot_type: PlotType, is_3d: bool, mat: X, num_rows: usize, num_cols: usize, dimensions: Option<(f64, f64, f64, f64)>,
 		options: Vec<PlotOption<String>>,
@@ -217,6 +254,7 @@ impl PlotElement
 			YErrorBars => "yerrorbars",
 			FillBetween => "filledcurves",
 			Boxes => "boxes",
+			Candlesticks => "candlesticks",
 			Pm3D => "pm3d",
 			Image => "image",
 		};
@@ -479,6 +517,7 @@ pub enum PlotType
 	YErrorBars,
 	FillBetween,
 	Boxes,
+  Candlesticks,
 	Pm3D,
 	Image,
 }
